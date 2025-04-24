@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/bookListFragment">
+
+    <fragment
+        android:id="@+id/bookListFragment"
+        android:name="knightcoder.shelf.presentation.booklist.BookListFragment"
+        android:label="Books">
+        <action
+            android:id="@+id/action_bookListFragment_to_addEditBookFragment"
+            app:destination="@id/addEditBookFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addEditBookFragment"
+        android:name="knightcoder.shelf.presentation.addeditbook.AddEditBookFragment"
+        android:label="Add/Edit Book">
+        <argument
+            android:name="book"
+            app:argType="knightcoder.shelf.domain.model.Book"
+            app:nullable="true" />
+    </fragment>
+
+
+</navigation>
