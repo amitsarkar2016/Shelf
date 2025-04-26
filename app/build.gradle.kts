@@ -90,4 +90,11 @@ dependencies {
     // Navigation Libraries
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+
+    // Shimmer Effect Libraries
+    implementation(libs.com.facebook.shimmer)
+
+    // Swiperefresh
+    implementation(libs.androidx.swiperefreshlayout)
+
 }

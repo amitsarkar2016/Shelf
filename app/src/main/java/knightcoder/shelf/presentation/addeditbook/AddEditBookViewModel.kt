@@ -21,9 +21,4 @@ class AddEditBookViewModel @Inject constructor(
     fun update(book: Book) = viewModelScope.launch(Dispatchers.IO) {
         repository.updateBook(book)
     }
-
-    fun delete(book: Book) = viewModelScope.launch(Dispatchers.IO) {
-        repository.deleteBook(book)
-    }
-
 }

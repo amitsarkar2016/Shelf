@@ -1,12 +1,12 @@
 package knightcoder.shelf.presentation.booklist
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -33,7 +33,6 @@ class BookListFragment : Fragment() {
     private val viewModel: BookListViewModel by viewModels()
 
     private lateinit var adapter: BookAdapter
-    private var filterQuery: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,15 +57,20 @@ class BookListFragment : Fragment() {
 
         observeBooks()
 
-        binding.noBooks.isVisible = true
-
         binding.addBookButton.setOnClickListener {
             findNavController().navigate(R.id.action_bookListFragment_to_addEditBookFragment)
         }
 
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            viewModel.refresh()
+        }
+
+        binding.filterEditText.addTextChangedListener {
+            viewModel.setFilterQuery(it.toString())
+        }
+
         binding.filterButton.setOnClickListener {
-            filterQuery = binding.filterEditText.text.toString().trim()
-            observeBooks()
+            viewModel.setFilterQuery(binding.filterEditText.text.toString())
         }
     }
 
@@ -85,35 +89,57 @@ class BookListFragment : Fragment() {
         popup.show()
     }
 
-
-
     private fun observeBooks() {
-        val flow = if (filterQuery.isNullOrEmpty()) {
-            viewModel.books
-        } else {
-            viewModel.filterByAuthor(filterQuery!!)
-        }
-
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                flow.collectLatest { books ->
+                viewModel.uiState.collectLatest { state ->
+                    binding.swipeRefreshLayout.isRefreshing = false
 
-                    binding.noBooks.isVisible = books.isEmpty()
+                    when (state) {
+                        is BookListUiState.Loading -> {
+                            binding.shimmerViewContainer.isVisible = true
+                            binding.shimmerViewContainer.startShimmer()
+                            binding.recyclerView.isVisible = false
+                            binding.noBooks.isVisible = false
+                        }
 
-                    val grouped = books.groupBy {
-                        SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(Date(it.createdAt))
+                        is BookListUiState.Success -> {
+                            binding.shimmerViewContainer.isVisible = false
+                            binding.shimmerViewContainer.stopShimmer()
+
+                            val grouped = state.books.groupBy {
+                                SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(Date(it.createdAt))
+                            }
+
+                            val groupedList = grouped.mapValues { entry ->
+                                entry.value.sortedByDescending { it.author }
+                            }
+
+                            adapter.submitData(groupedList.toSortedMap(compareByDescending { it }))
+
+                            binding.recyclerView.isVisible = true
+                            binding.noBooks.isVisible = false
+                        }
+
+                        is BookListUiState.Empty -> {
+                            binding.shimmerViewContainer.isVisible = false
+                            binding.shimmerViewContainer.stopShimmer()
+                            binding.recyclerView.isVisible = false
+                            binding.noBooks.isVisible = true
+                        }
+
+                        is BookListUiState.Error -> {
+                            binding.shimmerViewContainer.isVisible = false
+                            binding.shimmerViewContainer.stopShimmer()
+                            binding.recyclerView.isVisible = false
+                            binding.noBooks.isVisible = true
+                        }
                     }
-
-                    val groupedList = grouped.mapValues { entry ->
-                        entry.value.sortedByDescending { it.author }
-                    }
-
-                    adapter.submitData(groupedList.toSortedMap(compareByDescending { it }))
                 }
             }
-
         }
     }
+
 
 
     override fun onDestroyView() {

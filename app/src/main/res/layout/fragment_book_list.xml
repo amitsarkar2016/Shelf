@@ -26,6 +26,7 @@
             android:id="@+id/addBookButton"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:contentDescription="Add book button"
             android:padding="4dp"
             android:src="@drawable/ic_add"
             app:tint="@color/icon_tint" />
@@ -61,21 +62,73 @@
             android:textColor="@color/white" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/noBooks"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:visibility="gone"
-        android:gravity="center"
-        android:text="No Books are listed" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="8dp"
-        android:layout_weight="1"
-        tools:listitem="@layout/item_book" />
+        android:layout_weight="1">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmerViewContainer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                app:shimmer_auto_start="true"
+                app:shimmer_duration="1500">
+
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <include layout="@layout/item_book_shimmer" />
+
+                        <include layout="@layout/item_book_shimmer" />
+
+                        <include layout="@layout/item_book_shimmer" />
+
+                        <include layout="@layout/item_book_shimmer" />
+
+                        <include layout="@layout/item_book_shimmer" />
+
+                        <include layout="@layout/item_book_shimmer" />
+
+                        <include layout="@layout/item_book_shimmer" />
+
+                        <include layout="@layout/item_book_shimmer" />
+
+                        <include layout="@layout/item_book_shimmer" />
+
+                        <include layout="@layout/item_book_shimmer" />
+                    </LinearLayout>
+                </ScrollView>
+
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:listitem="@layout/item_book" />
+
+            <TextView
+                android:id="@+id/noBooks"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="No Books are listed"
+                android:visibility="gone" />
+        </FrameLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 </LinearLayout>

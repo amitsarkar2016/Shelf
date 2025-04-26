@@ -59,7 +59,9 @@
                 android:layout_marginTop="16dp"
                 android:background="@drawable/edit_text_bg"
                 android:backgroundTint="@color/action_bar_color"
-                android:hint="Date of Publish"
+                android:hint="Year of Publish"
+                android:inputType="number"
+                android:maxLength="4"
                 android:padding="16dp"
                 android:paddingHorizontal="16dp" />
 

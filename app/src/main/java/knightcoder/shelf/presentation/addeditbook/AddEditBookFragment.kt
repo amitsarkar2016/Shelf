@@ -26,7 +26,7 @@ class AddEditBookFragment : Fragment() {
     private var isEditing = false
     private var existingBook: Book? = null
 
-    private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    private val dateFormat = SimpleDateFormat("yyyy", Locale.getDefault())
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,9 +52,9 @@ class AddEditBookFragment : Fragment() {
             }
         }
 
-        binding.dateEditText.setOnClickListener {
-            showDatePickerDialog()
-        }
+//        binding.dateEditText.setOnClickListener {
+//            showDatePickerDialog()
+//        }
 
         binding.saveButton.setOnClickListener {
             val title = binding.titleEditText.text.toString()
@@ -67,7 +67,7 @@ class AddEditBookFragment : Fragment() {
                 return@setOnClickListener
             }
             if (!isValidDate(date)) {
-                binding.dateEditText.error = "Invalid date format. Use YYYY-MM-DD"
+                binding.dateEditText.error = "Invalid date format. Use YYYY"
                 return@setOnClickListener
             }
 
@@ -75,7 +75,7 @@ class AddEditBookFragment : Fragment() {
                 id = existingBook?.id ?: 0,
                 title = title,
                 author = author,
-                publishedDate = date,
+                publishedYear = date,
                 description = description,
                 createdAt = existingBook?.createdAt ?: System.currentTimeMillis()
             )
@@ -88,7 +88,7 @@ class AddEditBookFragment : Fragment() {
     private fun fillForm(book: Book) {
         binding.titleEditText.setText(book.title)
         binding.authorEditText.setText(book.author)
-        binding.dateEditText.setText(book.publishedDate)
+        binding.dateEditText.setText(book.publishedYear)
         binding.descriptionEditText.setText(book.description)
     }
 

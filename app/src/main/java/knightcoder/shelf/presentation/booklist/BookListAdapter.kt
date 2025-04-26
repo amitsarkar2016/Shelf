@@ -65,7 +65,7 @@ class BookAdapter(
         fun bind(book: Book, onItemClick: (Book) -> Unit, onItemLongClick: (Book, View) -> Unit) {
             itemView.findViewById<TextView>(R.id.titleText).text = book.title
             itemView.findViewById<TextView>(R.id.authorText).text = book.author
-            itemView.findViewById<TextView>(R.id.publishedText).text = book.publishedDate
+            itemView.findViewById<TextView>(R.id.publishedText).text = book.publishedYear
             itemView.findViewById<TextView>(R.id.descText).text = book.description
 
             itemView.setOnClickListener { onItemClick(book) }

@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import knightcoder.shelf.data.local.dao.BookDao
 import knightcoder.shelf.data.local.entity.BookEntity
 
-@Database(entities = [BookEntity::class], version = 1, exportSchema = true)
+@Database(entities = [BookEntity::class], version = 2, exportSchema = true)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun bookDao(): BookDao

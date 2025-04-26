@@ -14,15 +14,21 @@ interface BookDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertBook(book: BookEntity)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertBooks(books: List<BookEntity>) // New: bulk insert
+
     @Update
     suspend fun updateBook(book: BookEntity)
 
     @Delete
     suspend fun deleteBook(book: BookEntity)
 
-    @Query("select * from books order by createdAt desc")
+    @Query("SELECT * FROM books ORDER BY createdAt DESC")
     fun getAllBooks(): Flow<List<BookEntity>>
 
-    @Query("select * from books where author like '%' || :author || '%' order by createdAt desc")
-    fun getBookByAuthor(author: String) : Flow<List<BookEntity>>
+    @Query("SELECT * FROM books ORDER BY createdAt DESC")
+    suspend fun getAllBooksOnce(): List<BookEntity>
+
+    @Query("SELECT * FROM books WHERE author LIKE '%' || :author || '%' ORDER BY createdAt DESC")
+    fun getBookByAuthor(author: String): Flow<List<BookEntity>>
 }

@@ -9,6 +9,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import knightcoder.shelf.data.local.dao.BookDao
 import knightcoder.shelf.data.local.db.AppDatabase
+import knightcoder.shelf.data.local.db.migration.VERSION_1_2
 import javax.inject.Singleton
 
 @Module
@@ -18,7 +19,9 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context): AppDatabase {
-        return Room.databaseBuilder(context, AppDatabase::class.java, "shelf_db").build()
+        return Room.databaseBuilder(context, AppDatabase::class.java, "shelf_db")
+            .addMigrations(VERSION_1_2)
+            .build()
     }
 
     @Provides

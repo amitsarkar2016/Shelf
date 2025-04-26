@@ -52,18 +52,6 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideEventOkHttpClient(
-        loggingInterceptor: HttpLoggingInterceptor,
-    ): OkHttpClient {
-        return OkHttpClient.Builder()
-            .addInterceptor(loggingInterceptor)
-            .readTimeout(0, TimeUnit.MILLISECONDS)
-            .build()
-    }
-
-
-    @Provides
-    @Singleton
     fun provideAuthService(retrofit: Retrofit): BookApiService {
         return retrofit.create(BookApiService::class.java)
     }
